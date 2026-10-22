@@ -3,7 +3,7 @@
 Página interativa para embed (iframe) com as datas-base de todas as competições do futebol
 masculino profissional em 2027, a partir do calendário publicado pela CBF (versão de 9/10/2026).
 
-- **Mês a mês:** o leitor monta o calendário do seu clube (atalhos para Série A, B, C e D) e vê a
+- **Mês a mês:** o leitor monta o calendário do seu clube (série + Libertadores, Sul-Americana ou copa regional) e vê a
   grade do mês com a agenda ao lado; no celular, a grade vira pontos coloridos e a agenda fica embaixo.
 - **O ano inteiro:** linha do tempo de cada competição e mapa de datas por mês.
 - **Competições:** início, fim e decisões de cada torneio.
