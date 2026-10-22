@@ -58,6 +58,7 @@ h2{font-size:clamp(22px,2.6vw,28px);letter-spacing:-.02em;line-height:1.15;margi
 .presets{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .preset{all:unset;cursor:pointer;font-size:13px;font-weight:600;padding:5px 10px;border-radius:4px;background:var(--cinza)}
 .preset[aria-pressed=true]{background:#000;color:#fff}
+.aviso{margin:0;font-size:14px;line-height:1.5;color:var(--texto);background:#FFF6D6;border-left:3px solid #F0B400;padding:8px 12px;border-radius:0 4px 4px 0}
 .chave{display:inline-flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;user-select:none}
 .chave input{accent-color:var(--vermelho);width:16px;height:16px;margin:0}
 /* seletor de meses */
@@ -231,6 +232,7 @@ h2{font-size:clamp(22px,2.6vw,28px);letter-spacing:-.02em;line-height:1.15;margi
         <div class="acoes"><button type="button" class="lnk" id="limpar">Limpar</button></div>
       </div>
       <div class="comps" id="comps" role="group" aria-label="Competições"></div>
+      <p class="aviso" id="avisoA" hidden><b>Clube da Série A:</b> a Copa do Brasil aparece a partir da Fase 5 (24/2), quando entram os 20 clubes da primeira divisão. As Fases 1 a 4 ficam de fora.</p>
       <label class="chave"><input type="checkbox" id="mostraPausas" checked> Mostrar datas FIFA, Copa do Mundo Feminina e recessos</label>
     </div>
     <div class="meses" id="meses" role="group" aria-label="Mês"></div>
@@ -352,11 +354,15 @@ h2{font-size:clamp(22px,2.6vw,28px);letter-spacing:-.02em;line-height:1.15;margi
   try{var g=JSON.parse(localStorage.getItem('cal27-sel')||'null');if(g&&typeof g==='object')ORDEM.forEach(function(k){sel[k]=!!g[k];});}catch(e){}
   function salva(){try{localStorage.setItem('cal27-sel',JSON.stringify(sel));}catch(e){}}
   function ativos(){return ORDEM.filter(function(k){return sel[k];});}
+  /* clube da Série A: Série A marcada sem B, C ou D. Esses clubes só entram na Copa do Brasil na Fase 5 */
+  function modoA(){return sel.BSA&&!sel.BSB&&!sel.BSC&&!sel.BSD;}
+  function vale(e){return sel[e[0]]&&!(modoA()&&e[0]==='CBR'&&/sem clubes da Série A/.test(e[2]));}
 
   /* ---------- filtros ---------- */
-  function contaComp(k){return DADOS.filter(function(e){return e[0]===k;}).length;}
-  $('comps').innerHTML=ORDEM.map(function(k){return '<button type="button" class="comp" data-k="'+k+'" style="--c:'+C[k].cor+'"><i></i>'+C[k].n+' <small>'+contaComp(k)+'</small></button>';}).join('');
-  function pintaFiltros(){[].forEach.call($('comps').children,function(b){b.setAttribute('aria-pressed',!!sel[b.dataset.k]);});
+  function contaComp(k){return DADOS.filter(function(e){return e[0]===k&&!(modoA()&&k==='CBR'&&/sem clubes da Série A/.test(e[2]));}).length;}
+  $('comps').innerHTML=ORDEM.map(function(k){return '<button type="button" class="comp" data-k="'+k+'" style="--c:'+C[k].cor+'"><i></i>'+C[k].n+' <small></small></button>';}).join('');
+  function pintaFiltros(){[].forEach.call($('comps').children,function(b){b.setAttribute('aria-pressed',!!sel[b.dataset.k]);b.querySelector('small').textContent=contaComp(b.dataset.k);});
+    $('avisoA').hidden=!(modoA()&&sel.CBR);
     var a=ativos().slice().sort().join();[].forEach.call($('presets').children,function(b){b.setAttribute('aria-pressed',PRESETS[b.dataset.p].slice().sort().join()===a);});}
   $('comps').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;sel[b.dataset.k]=!sel[b.dataset.k];salva();atualiza();});
   $('presets').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;ORDEM.forEach(function(k){sel[k]=PRESETS[b.dataset.p].indexOf(k)>=0;});salva();atualiza();});
@@ -364,7 +370,7 @@ h2{font-size:clamp(22px,2.6vw,28px);letter-spacing:-.02em;line-height:1.15;margi
   $('mostraPausas').addEventListener('change',function(){pausas=this.checked;desenhaMes();});
 
   /* ---------- seletor de meses ---------- */
-  function eventosMes(m){var a=ativos();return DADOS.filter(function(e){return +e[1].slice(0,2)===m&&a.indexOf(e[0])>=0;});}
+  function eventosMes(m){return DADOS.filter(function(e){return +e[1].slice(0,2)===m&&vale(e);});}
   function diasComJogo(m){var s={};eventosMes(m).forEach(function(e){s[e[1]]=1;});return Object.keys(s).length;}
   function desenhaMeses(){var cont=[],mx=1;for(var m=1;m<=12;m++){cont.push(diasComJogo(m));mx=Math.max(mx,cont[m-1]);}
     $('meses').innerHTML=cont.map(function(c,i){return '<button type="button" class="mes" data-m="'+(i+1)+'" aria-pressed="'+(mes===i+1)+'" aria-label="'+MESES[i]+': '+c+' dias com jogos"><b>'+MESES[i].slice(0,3)+'</b><span class="barra" aria-hidden="true"><i style="height:'+Math.max(2,22*c/mx)+'px"></i></span><small>'+c+(c===1?' dia':' dias')+'</small></button>';}).join('');}
@@ -380,7 +386,7 @@ h2{font-size:clamp(22px,2.6vw,28px);letter-spacing:-.02em;line-height:1.15;margi
     var h=['dom','seg','ter','qua','qui','sex','sáb'].map(function(d){return '<div class="dsem" role="columnheader">'+d+'</div>';}).join('');
     for(var i=0;i<ini;i++)h+='<div class="dia vazio" aria-hidden="true"></div>';
     var itens=[],totalEv=0,comps={};
-    for(var d=1;d<=n;d++){var k=key(mes,d),evs=(POR[k]||[]).filter(function(e){return a.indexOf(e[0])>=0;}),p=pausas?perDe(k):null,wd=dt(k).getDay(),fds=wd===0||wd===6;
+    for(var d=1;d<=n;d++){var k=key(mes,d),evs=(POR[k]||[]).filter(vale),p=pausas?perDe(k):null,wd=dt(k).getDay(),fds=wd===0||wd===6;
       var cls='dia'+(fds?' fds':'')+(p?' p-'+p.k:(pausas&&recesso(k)?' p-rec':''))+(diaSel===d?' sel':'');
       var marca=FERIADO[k]||'';
       var lab=d+' de '+MESES[mes-1]+(evs.length?': '+evs.map(function(e){return C[e[0]].n+' '+e[2];}).join('; '):': sem jogos das competições escolhidas');
