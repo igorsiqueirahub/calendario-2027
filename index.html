@@ -58,6 +58,9 @@ h2{font-size:clamp(22px,2.6vw,28px);letter-spacing:-.02em;line-height:1.15;margi
 .presets{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .passo{display:grid;grid-template-columns:24px auto minmax(0,1fr);align-items:center;gap:8px 10px}
 .passo-n{width:22px;height:22px;border-radius:50%;background:var(--escuro);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.sub-passo{grid-column:2/-1;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;font-size:13px;color:var(--mudo);padding:8px 10px;background:var(--cinza);border-radius:4px}
+.sub-passo .preset{background:#fff}
+.sub-passo .preset[aria-pressed=true]{background:#000}
 .passo-t{font-size:14px;font-weight:700;color:var(--tinta);white-space:nowrap}
 .ajuste summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--mudo);list-style:none;display:inline-flex;align-items:center;gap:6px}
 .ajuste summary::-webkit-details-marker{display:none}
@@ -192,6 +195,7 @@ h2{font-size:clamp(22px,2.6vw,28px);letter-spacing:-.02em;line-height:1.15;margi
   .filtros{padding:12px}
   .passo{grid-template-columns:24px minmax(0,1fr)}
   .passo .presets{grid-column:1/-1}
+  .sub-passo{grid-column:1/-1}
   .meses{grid-template-columns:repeat(6,minmax(0,1fr))}
   .dia{min-height:58px;padding:4px 3px}
   .dia .num em{display:none}
@@ -252,7 +256,12 @@ h2{font-size:clamp(22px,2.6vw,28px);letter-spacing:-.02em;line-height:1.15;margi
           <button type="button" class="preset" data-i="LIB">Libertadores</button>
           <button type="button" class="preset" data-i="CSU">Sul-Americana</button>
           <button type="button" class="preset" data-i="REG">Nenhuma</button>
-        </div></div>
+        </div>
+        <div class="sub-passo" id="libFase" hidden><span>Entra na Libertadores pela</span>
+          <div class="presets" role="group" aria-label="Fase de entrada na Libertadores">
+            <button type="button" class="preset" data-f="pre">Fase 2 <small>17/2</small></button>
+            <button type="button" class="preset" data-f="grupos">Fase de grupos <small>7/4</small></button>
+          </div></div></div>
       <div class="passo" id="passoExtra" hidden><span class="passo-n">3</span><span class="passo-t">Também disputa?</span>
         <div class="presets" id="extras" role="group" aria-label="Também disputa">
           <button type="button" class="preset" data-x="SCB">Supercopa do Brasil <small>24/1</small></button>
@@ -379,29 +388,41 @@ h2{font-size:clamp(22px,2.6vw,28px);letter-spacing:-.02em;line-height:1.15;margi
   /* ---------- estado ---------- */
   var sel={};ORDEM.forEach(function(k){sel[k]=true;});
   var mes=1,diaSel=null,pausas=true;
-  try{var g=JSON.parse(localStorage.getItem('cal27-sel')||'null');if(g&&typeof g==='object')ORDEM.forEach(function(k){sel[k]=!!g[k];});}catch(e){}
-  function salva(){try{localStorage.setItem('cal27-sel',JSON.stringify(sel));}catch(e){}}
+  var preLib=false;
+  try{var g=JSON.parse(localStorage.getItem('cal27-sel')||'null');if(g&&typeof g==='object'){ORDEM.forEach(function(k){sel[k]=!!g[k];});preLib=!!g._preLib;}}catch(e){}
+  function salva(){try{var o=JSON.parse(JSON.stringify(sel));o._preLib=preLib;localStorage.setItem('cal27-sel',JSON.stringify(o));}catch(e){}}
   function ativos(){return ORDEM.filter(function(k){return sel[k];});}
   /* clube da Série A: Série A marcada sem B, C ou D. Esses clubes só entram na Copa do Brasil na Fase 5 */
   function modoA(){return sel.BSA&&!sel.BSB&&!sel.BSC&&!sel.BSD;}
-  function vale(e){return sel[e[0]]&&!(modoA()&&e[0]==='CBR'&&/sem clubes da Série A/.test(e[2]));}
+  /* datas que não valem para o clube escolhido */
+  function oculto(e){var c=e[0],t=e[2];
+    if(modoA()&&c==='CBR'&&/sem clubes da Série A/.test(t))return true;
+    /* obs. 9 da CBF: clube da Série A na Recopa ou na Fase 2 da Libertadores joga a Fase 5 da Copa do Brasil na 2ª janela */
+    if(modoA()&&c==='CBR'&&/^Fase 5.*1ª janela/.test(t)&&(sel.REC||(sel.LIB&&preLib)))return true;
+    if(serieClube()&&c==='LIB'&&!preLib&&/^Fase [23]/.test(t))return true;
+    return false;}
+  function vale(e){return sel[e[0]]&&!oculto(e);}
   /* calendário de um clube: exatamente uma série marcada */
   function serieClube(){var s=SERIES.filter(function(k){return sel[k];});return s.length===1?s[0]:null;}
   /* clubes na Libertadores ou na Sul-Americana não disputam as copas regionais (e não jogam as duas Conmebol ao mesmo tempo) */
   function escolheIntl(k){INTL.forEach(function(x){sel[x]=x===k;});}
 
   /* ---------- filtros ---------- */
-  function contaComp(k){return DADOS.filter(function(e){return e[0]===k&&!(modoA()&&k==='CBR'&&/sem clubes da Série A/.test(e[2]));}).length;}
+  function contaComp(k){return DADOS.filter(function(e){return e[0]===k&&!oculto(e);}).length;}
   $('comps').innerHTML=ORDEM.map(function(k){return '<button type="button" class="comp" data-k="'+k+'" style="--c:'+C[k].cor+'"><i></i>'+C[k].n+' <small></small></button>';}).join('');
   function pintaFiltros(){[].forEach.call($('comps').children,function(b){b.setAttribute('aria-pressed',!!sel[b.dataset.k]);b.querySelector('small').textContent=contaComp(b.dataset.k);});
     var sc=serieClube(),tudo=ORDEM.every(function(k){return sel[k];});
     [].forEach.call($('series').children,function(b){b.setAttribute('aria-pressed',b.dataset.s==='tudo'?tudo:b.dataset.s===sc);});
-    $('passoInt').hidden=!sc;$('passoExtra').hidden=!sc;
+    $('passoInt').hidden=!sc;$('passoExtra').hidden=!sc;$('libFase').hidden=!(sc&&sel.LIB);
+    [].forEach.call($('libFase').querySelectorAll('button'),function(b){b.setAttribute('aria-pressed',(b.dataset.f==='pre')===preLib);});
     [].forEach.call($('extras').children,function(b){b.setAttribute('aria-pressed',!!sel[b.dataset.x]);});
     [].forEach.call($('intl').children,function(b){b.setAttribute('aria-pressed',!!sel[b.dataset.i]&&INTL.filter(function(x){return sel[x];}).length===1);});
     var av=[];
-    if(modoA()&&sel.CBR)av.push('<b>Clube da Série A:</b> a Copa do Brasil aparece a partir da Fase 5 (24/2), quando entram os 20 clubes da primeira divisão. As Fases 1 a 4 ficam de fora.');
-    if(sc&&(sel.LIB||sel.CSU))av.push('<b>'+(sel.LIB?'Libertadores':'Sul-Americana')+':</b> clubes que disputam competições da Conmebol não jogam as copas regionais, por isso elas ficam fora deste calendário.');
+    if(modoA()&&sel.CBR)av.push('<b>Clube da Série A:</b> a Copa do Brasil aparece a partir da Fase 5 ('+((sel.REC||(sel.LIB&&preLib))?'17/3':'24/2')+'), quando entram os 20 clubes da primeira divisão. As Fases 1 a 4 ficam de fora.');
+    var semReg=' Clubes em competições da Conmebol não jogam as copas regionais, por isso elas ficam fora deste calendário.';
+    if(sc&&sel.LIB)av.push((preLib?'<b>Libertadores desde a Fase 2:</b> o calendário inclui as Fases 2 (17 e 24/2) e 3 (3 e 10/3), antes da fase de grupos.':'<b>Libertadores na fase de grupos:</b> as Fases 2 e 3 ficam de fora; a estreia é em 7/4.')+semReg);
+    if(modoA()&&sel.CBR&&(sel.REC||(sel.LIB&&preLib)))av.push('<b>Copa do Brasil, Fase 5:</b> clubes da Série A na '+(sel.REC&&sel.LIB&&preLib?'Recopa e na Fase 2 da Libertadores':sel.REC?'Recopa':'Fase 2 da Libertadores')+' jogam a Fase 5 na 2ª janela (17/3 e 21/4), segundo a CBF.');
+    if(sc&&sel.CSU)av.push('<b>Sul-Americana:</b>'+semReg);
     $('avisos').innerHTML=av.map(function(t){return '<p class="aviso">'+t+'</p>';}).join('');}
   $('comps').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;var k=b.dataset.k;
     if(serieClube()&&INTL.indexOf(k)>=0&&!sel[k])escolheIntl(k);else sel[k]=!sel[k];salva();atualiza();});
@@ -410,6 +431,7 @@ h2{font-size:clamp(22px,2.6vw,28px);letter-spacing:-.02em;line-height:1.15;margi
     else{var clube=serieClube(),i=clube?INTL.filter(function(x){return sel[x];})[0]:null,scb=clube&&sel.SCB,rec=clube&&sel.REC;
       ORDEM.forEach(function(k){sel[k]=k===s||k==='CBR'||k==='EST';});escolheIntl(i||'REG');sel.SCB=!!scb;sel.REC=!!rec;}
     salva();atualiza();});
+  $('libFase').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;preLib=b.dataset.f==='pre';salva();atualiza();});
   $('extras').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;sel[b.dataset.x]=!sel[b.dataset.x];salva();atualiza();});
   $('intl').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;escolheIntl(b.dataset.i);salva();atualiza();});
   $('limpar').addEventListener('click',function(){ORDEM.forEach(function(k){sel[k]=false;});salva();atualiza();});
@@ -499,13 +521,16 @@ h2{font-size:clamp(22px,2.6vw,28px);letter-spacing:-.02em;line-height:1.15;margi
   var DEST={BSA:/final|Data 1$/i,BSB:/Playoff|final|Data 1$/i,BSC:/Final|Data 1$/i,BSD:/Playoff|Data 1$/i,EST:/Data (1|11)$/,REG:/Data (1|10)$/,CBR:/.*/,LIB:/.*/,CSU:/.*/,SCB:/.*/,REC:/.*/};
   var OBS={BSA:'Não joga nas datas FIFA. Para entre 18/6 e 27/7 por causa da Copa do Mundo Feminina.',BSB:'38 rodadas e playoff em ida e volta (23/11 e 27/11).',BSC:'Final em ida e volta, em 24/10 e 31/10.',BSD:'Playoff em ida e volta (25/8 e 1/9); a competição tem 24 datas-base.',
     CBR:'Os 20 clubes da Série A entram na Fase 5. Ela e as oitavas têm duas janelas de datas, conforme a agenda internacional e os estádios da Copa Feminina. Final em jogo único.',EST:'Terminam obrigatoriamente até 7/3 nos estados com clubes da Série A.',REG:'Dez datas entre o fim de março e a metade de junho. Clubes que disputam a Libertadores ou a Sul-Americana não participam.',
-    LIB:'Fase 2 e 3 em fevereiro e março; grupos de abril a maio; final em 27/11.',CSU:'Playoff em julho; final em 20/11.',SCB:'Abre a temporada nacional.',REC:'Em ida e volta, em fevereiro.'};
+    LIB:'Parte dos clubes entra na Fase 2, em fevereiro, e passa pela Fase 3 em março. Os demais estreiam na fase de grupos, em 7/4. Final em 27/11.',CSU:'Playoff em julho; final em 20/11.',SCB:'Abre a temporada nacional.',REC:'Em ida e volta, em fevereiro.'};
   function desenhaCards(){
     /* ordem editorial: pela data de início, com as competições da Conmebol juntas e as Séries B, C, D e regionais no fim */
     var CRONO=['CBR','EST','SCB','BSA','LIB','REC','CSU','BSB','BSC','BSD','REG'];
     $('cards').innerHTML=CRONO.map(function(k){var l=DADOS.filter(function(e){return e[0]===k;}),a=l[0][1],b=l[l.length-1][1],dest=l.filter(function(e,i){return DEST[k].test(e[2])||i===l.length-1;});
       var lista=function(arr){return '<ul>'+arr.map(function(e){return '<li><b>'+curta(e[1])+'</b><span>'+e[2]+' · '+SEM[dt(e[1]).getDay()]+'</span></li>';}).join('')+'</ul>';};
-      var resumo=(k==='CBR'||k==='LIB'||k==='CSU'||k==='SCB'||k==='REC')?lista(l.length>8?l.filter(function(e){return !/rodada|Fase [1-4] /.test(e[2])||e===l[0];}):l):lista(dest);
+      var fases=function(arr){var g=arr.filter(function(e){return /^Grupos, rodada/.test(e[2]);}),out=[];
+        arr.forEach(function(e){if(/^Grupos, rodada/.test(e[2])){if(e===g[0])out.push('<li><b>'+curta(g[0][1])+'</b><span>Fase de grupos · '+g.length+' rodadas, até '+curta(g[g.length-1][1])+'</span></li>');}
+          else out.push('<li><b>'+curta(e[1])+'</b><span>'+e[2]+' · '+SEM[dt(e[1]).getDay()]+'</span></li>');});return '<ul>'+out.join('')+'</ul>';};
+      var resumo=(k==='CBR'||k==='LIB'||k==='CSU'||k==='SCB'||k==='REC')?fases(l):lista(dest);
       return '<article class="card" style="--c:'+C[k].cor+'"><h3>'+C[k].l+'</h3><div class="per">'+(a===b?curta(a):curta(a)+' → '+curta(b))+' <small>'+l.length+(l.length===1?' data':' datas')+'</small></div>'+
         '<div><div class="mini" aria-hidden="true">'+l.map(function(e){return '<i style="left:'+(100*doy(e[1])/365).toFixed(2)+'%"></i>';}).join('')+'</div><div class="mini-m" aria-hidden="true"><span>jan</span><span>abr</span><span>jul</span><span>out</span><span>dez</span></div></div>'+
         '<p class="obs">'+OBS[k]+'</p>'+resumo+(l.length>dest.length&&!(k==='SCB'||k==='REC')?'<details><summary>Ver todas as '+l.length+' datas</summary>'+lista(l)+'</details>':'')+'</article>';}).join('');
