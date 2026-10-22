@@ -1,0 +1,26 @@
+<!-- Cole este trecho no código-fonte da sua página, onde o calendário deve aparecer.
+     Para abrir em outra aba, acrescente ao src: #ano, #competicoes ou #pausas -->
+<iframe class="cal-cbf"
+  src="https://igorsiqueirahub.github.io/calendario-2027/"
+  title="Calendário 2027: o ano do futebol brasileiro"
+  allow="clipboard-write" style="width:100%;height:1900px;border:0;display:block" loading="lazy"></iframe>
+<script>
+/* Ajusta a altura do iframe, rola até o ponto certo quando o leitor troca de aba ou toca num dia
+   e faz o botão "Copiar link" copiar o endereço desta página */
+(function () {
+  if (window.__calCbf) return; window.__calCbf = true;
+  window.addEventListener('message', function (e) {
+    var d = e.data; if (!d || typeof d.type !== 'string' || d.type.indexOf('cal-cbf:') !== 0) return;
+    document.querySelectorAll('iframe.cal-cbf').forEach(function (f) {
+      if (f.contentWindow !== e.source) return;
+      if (d.type === 'cal-cbf:pronto') f.contentWindow.postMessage({ type: 'cal-cbf:pagina', url: location.href }, '*');
+      if (d.type === 'cal-cbf:altura') f.style.height = d.altura + 'px';
+      if (d.type === 'cal-cbf:rolar') {
+        var alvo = f.getBoundingClientRect().top + window.pageYOffset + d.y;
+        var fora = alvo < window.pageYOffset || alvo > window.pageYOffset + window.innerHeight - 80;
+        if (d.suave ? fora : window.pageYOffset > alvo) window.scrollTo({ top: alvo, behavior: 'smooth' });
+      }
+    });
+  });
+})();
+</script>

@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Calendário do Futebol 2027</title>
+<meta name="description" content="As datas de todas as competições do futebol masculino profissional no Brasil em 2027, segundo o calendário da CBF: Brasileirão, Copa do Brasil, Estaduais, Libertadores, Sul-Americana, datas FIFA e pausas.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400..900&display=swap" rel="stylesheet">
+<style>
+/* Mesmo sistema dos painéis anteriores: vermelho, preto e branco, cantos retos, Figtree.
+   As competições usam as cores do calendário oficial da CBF, ajustadas para leitura. */
+:root{--vermelho:#CB0003;--vermelho-claro:#FF7366;--tinta:#000;--texto:#1A1A1A;--mudo:#4D4D4D;--fraco:#767676;--linha:#E6E6E6;--cinza:#F2F2F2;--trilho:#EDEDED;--escuro:#1A1A1A;--fundo:#fff;
+--fifa:#D6E6F7;--fem:#F8DDF3;--rec:#E3F1DA;--jan:#FFF1C9;color-scheme:light}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--fundo)}
+body{font-family:"Figtree",Arial,Helvetica,sans-serif;color:var(--texto);-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
+.wrap{max-width:1136px;margin:0 auto;padding:32px max(32px,env(safe-area-inset-right,0px)) 40px max(32px,env(safe-area-inset-left,0px))}
+html.em-iframe .wrap{padding:16px 2px}
+html.em-iframe body{border-top:1px solid var(--linha);border-bottom:1px solid var(--linha)}
+h1{font-size:clamp(30px,4.2vw,48px);line-height:1.04;letter-spacing:-.03em;font-weight:800;color:var(--tinta);margin:0;text-wrap:balance}
+h1 span{color:var(--vermelho);display:block}
+.abre{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:20px 48px;align-items:start;margin-bottom:24px}
+.lede{font-size:17px;line-height:1.6;margin:4px 0 0}
+.metas{display:flex;flex-wrap:wrap;gap:8px;border:1px solid var(--linha);border-radius:4px;padding:16px 24px;margin-bottom:16px;align-items:center}
+.chip{display:inline-flex;align-items:center;gap:8px;background:var(--cinza);border-radius:4px;padding:7px 12px;font-size:14px;font-weight:600}
+.chip svg{width:15px;height:15px;color:var(--vermelho);flex:none}
+.btn-link{all:unset;cursor:pointer;margin-left:auto;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--linha);border-radius:4px;padding:7px 12px;font-size:14px;font-weight:500;white-space:nowrap}
+.btn-link svg{width:15px;height:15px}
+.placar{background:var(--escuro);color:#fff;border-radius:4px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+.pl{padding:24px 24px 22px;position:relative;display:flex;flex-direction:column;gap:8px}
+.pl+.pl:before{content:"";position:absolute;left:0;top:28px;bottom:28px;width:1px;background:#3A3A3A}
+.pl .n{font-size:clamp(26px,3vw,34px);font-weight:800;letter-spacing:-.03em;line-height:1;white-space:nowrap}
+.pl .n small{font-size:.55em;color:#BDBDBD;margin:0 4px;font-weight:600}
+.pl .t{font-size:14px;line-height:1.45;color:#D6D6D6;flex:1}
+.pl a{color:var(--vermelho-claro);font-size:14px;font-weight:600;text-decoration:none}
+.nav{margin-top:36px;border-top:2px solid var(--tinta);border-bottom:1px solid var(--linha);position:relative}
+.nav:after{content:"";position:absolute;right:0;top:0;bottom:0;width:40px;background:linear-gradient(90deg,rgba(255,255,255,0),#fff);pointer-events:none;opacity:0;transition:opacity .15s}
+.nav.mais:after{opacity:1}
+.abas{display:flex;overflow-x:auto;scrollbar-width:none;gap:4px}
+.abas::-webkit-scrollbar{display:none}
+.abas button{all:unset;cursor:pointer;white-space:nowrap;font-size:13px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--mudo);padding:16px 12px 14px;border-bottom:3px solid transparent}
+.abas button[aria-selected=true]{color:var(--tinta);border-bottom-color:var(--vermelho)}
+button:focus-visible,a:focus-visible,li:focus-visible{outline:2px solid var(--vermelho);outline-offset:2px}
+.painel{padding-top:28px}
+.secao{margin-top:40px}
+.secao:first-child{margin-top:0}
+h2{font-size:clamp(22px,2.6vw,28px);letter-spacing:-.02em;line-height:1.15;margin:0 0 6px;color:var(--tinta);text-wrap:balance}
+.sub{font-size:15px;line-height:1.5;color:var(--mudo);margin:0 0 16px;max-width:820px}
+.rotulo{font-size:12px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--mudo)}
+/* filtros */
+.filtros{border:1px solid var(--linha);border-radius:4px;padding:16px 18px;display:flex;flex-direction:column;gap:12px}
+.filtros .topo{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px}
+.filtros .topo .acoes{margin-left:auto;display:flex;gap:6px}
+.lnk{all:unset;cursor:pointer;font-size:13px;font-weight:600;color:var(--vermelho);padding:4px 6px}
+.comps{display:flex;flex-wrap:wrap;gap:6px}
+.comp{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:7px;border:1px solid var(--linha);border-radius:4px;padding:6px 10px 6px 8px;font-size:14px;font-weight:600;color:var(--fraco);background:#fff;transition:background .1s}
+.comp i{width:12px;height:12px;border-radius:2px;border:2px solid currentColor;flex:none;box-sizing:border-box}
+.comp[aria-pressed=true]{color:var(--tinta);border-color:#BDBDBD}
+.comp[aria-pressed=true] i{border:0;background:var(--c)}
+.comp small{font-weight:500;color:var(--fraco);font-size:12px}
+.presets{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.preset{all:unset;cursor:pointer;font-size:13px;font-weight:600;padding:5px 10px;border-radius:4px;background:var(--cinza)}
+.preset[aria-pressed=true]{background:#000;color:#fff}
+.chave{display:inline-flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;user-select:none}
+.chave input{accent-color:var(--vermelho);width:16px;height:16px;margin:0}
+/* seletor de meses */
+.meses{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px;margin:18px 0 0}
+.mes{all:unset;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 2px 6px;border-radius:4px;border:1px solid var(--linha);background:#fff}
+.mes b{font-size:13px;letter-spacing:.4px;text-transform:uppercase;color:var(--tinta)}
+.mes .barra{width:70%;height:22px;display:flex;align-items:flex-end;justify-content:center}
+.mes .barra i{display:block;width:100%;background:var(--escuro);border-radius:2px 2px 0 0;min-height:2px}
+.mes small{font-size:11px;color:var(--mudo)}
+.mes[aria-pressed=true]{background:#000;border-color:#000}
+.mes[aria-pressed=true] b,.mes[aria-pressed=true] small{color:#fff}
+.mes[aria-pressed=true] .barra i{background:var(--vermelho-claro)}
+/* mês */
+.mes-cab{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:28px 0 12px;flex-wrap:wrap}
+.mes-cab h2{font-size:clamp(28px,3.4vw,40px);margin:0;letter-spacing:-.03em;font-weight:800}
+.mes-cab .setas{display:flex;gap:6px}
+.seta{all:unset;cursor:pointer;width:38px;height:38px;border:1px solid var(--linha);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.seta:disabled{opacity:.3;cursor:default}
+.resumo-mes{font-size:15px;line-height:1.55;color:var(--mudo);margin:0 0 14px;max-width:880px}
+.resumo-mes b{color:var(--tinta)}
+.mes-corpo{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:24px;align-items:start}
+.grade{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border-top:1px solid var(--linha);border-left:1px solid var(--linha)}
+.grade .dsem{font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--mudo);padding:8px 6px;border-right:1px solid var(--linha);border-bottom:1px solid var(--linha);background:var(--cinza)}
+.dia{all:unset;box-sizing:border-box;cursor:pointer;min-height:92px;border-right:1px solid var(--linha);border-bottom:1px solid var(--linha);padding:5px 5px 6px;display:flex;flex-direction:column;gap:3px;position:relative;background:#fff;min-width:0}
+.dia.vazio{cursor:default;background:#FAFAFA}
+.dia .num{font-size:13px;font-weight:700;color:var(--tinta);display:flex;justify-content:space-between;align-items:center;gap:4px}
+.dia .num em{font-style:normal;font-size:10px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;color:var(--mudo);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dia.fds .num{color:var(--vermelho)}
+.dia.p-fifa{background:var(--fifa)}.dia.p-fem{background:var(--fem)}.dia.p-rec{background:var(--rec)}
+.dia.sel{box-shadow:inset 0 0 0 2px #000}
+.ev{display:block;font-size:11px;font-weight:700;line-height:1.25;padding:2px 4px;border-radius:2px;color:#fff;background:var(--c);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ev.claro{color:#1A1A1A}
+.pontos{display:none;flex-wrap:wrap;gap:3px}
+.pontos i{width:9px;height:9px;border-radius:2px;background:var(--c);display:block}
+.legenda-p{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--mudo);margin:10px 0 0}
+.legenda-p i{display:inline-block;width:14px;height:14px;border-radius:2px;margin-right:6px;vertical-align:-2px;border:1px solid rgba(0,0,0,.08)}
+/* agenda */
+.agenda{list-style:none;margin:0;padding:0;border:1px solid var(--linha);border-radius:4px}
+.agenda>li{display:grid;grid-template-columns:52px minmax(0,1fr);gap:12px;padding:10px 14px;border-top:1px solid var(--linha);scroll-margin-top:12px}
+.agenda>li:first-child{border-top:0}
+.agenda>li.sel{background:#FFF6F5;box-shadow:inset 3px 0 0 var(--vermelho)}
+.agenda .dt{display:flex;flex-direction:column;align-items:center;line-height:1}
+.agenda .dt b{font-size:24px;font-weight:800;letter-spacing:-.02em;color:var(--tinta)}
+.agenda .dt small{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--mudo);margin-top:3px}
+.agenda .dt.fds small{color:var(--vermelho)}
+.agenda .its{display:flex;flex-direction:column;gap:5px;min-width:0}
+.agenda .it{display:grid;grid-template-columns:12px minmax(0,1fr);gap:8px;align-items:baseline;font-size:14px;line-height:1.4}
+.agenda .it i{width:12px;height:12px;border-radius:2px;background:var(--c);display:block;transform:translateY(1px)}
+.agenda .it b{color:var(--tinta)}
+.agenda .it span{color:var(--mudo)}
+.agenda .nota-dia{font-size:13px;color:var(--mudo);display:flex;align-items:center;gap:6px}
+.agenda .nota-dia:before{content:"";width:12px;height:12px;border-radius:2px;background:var(--pc,#ccc);flex:none}
+.agenda .vazia{padding:18px 16px;color:var(--mudo);font-size:14px;display:block}
+.agenda-cab{display:flex;justify-content:space-between;align-items:baseline;margin:0 0 8px}
+/* ano inteiro */
+.caixa{border:1px solid var(--linha);border-radius:4px;padding:16px 16px 10px}
+.linha-ano svg{display:block;width:100%;height:auto}
+.mapa{border-collapse:separate;border-spacing:2px;width:100%;font-size:13px;table-layout:fixed}
+.mapa th{font-weight:700;color:var(--mudo);font-size:11px;letter-spacing:.4px;text-transform:uppercase;padding:4px 2px}
+.mapa th.nm{text-align:left;color:var(--tinta);font-size:13px;letter-spacing:0;text-transform:none;width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mapa td{text-align:center;font-weight:700;height:32px;border-radius:2px;font-size:13px}
+.mapa td.z{color:#C4C4C4;font-weight:500;background:#FAFAFA}
+.mapa tr.tot td{background:none;color:var(--tinta);border-top:1px solid var(--linha)}
+.tw{overflow-x:auto}
+/* competições */
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.card{border:1px solid var(--linha);border-top:6px solid var(--c);border-radius:4px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.card h3{font-size:19px;margin:0;color:var(--tinta);letter-spacing:-.01em}
+.card .per{font-size:24px;font-weight:800;letter-spacing:-.02em;color:var(--tinta);line-height:1.1}
+.card .per small{font-size:14px;font-weight:600;color:var(--mudo);letter-spacing:0}
+.card .mini{height:14px;position:relative;background:var(--cinza);border-radius:2px}
+.card .mini i{position:absolute;top:0;bottom:0;width:2px;background:var(--c)}
+.card .mini-m{display:flex;justify-content:space-between;font-size:10px;color:var(--fraco);margin-top:2px}
+.card ul{list-style:none;margin:0;padding:0;font-size:14px;line-height:1.45}
+.card li{display:grid;grid-template-columns:58px minmax(0,1fr);gap:8px;padding:4px 0;border-top:1px solid var(--linha)}
+.card li:first-child{border-top:0}
+.card li b{color:var(--tinta)}
+.card li span{color:var(--mudo)}
+.card details summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--vermelho);list-style:none}
+.card details summary::-webkit-details-marker{display:none}
+.card details[open] summary{margin-bottom:6px}
+.card .obs{font-size:13px;line-height:1.5;color:var(--mudo);margin:0}
+/* pausas */
+.faixas{list-style:none;margin:0;padding:0;border:1px solid var(--linha);border-radius:4px}
+.faixas li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:6px 20px;padding:12px 16px;border-top:1px solid var(--linha);align-items:center}
+.faixas li:first-child{border-top:0}
+.faixas .q b{display:block;color:var(--tinta);font-size:15px}
+.faixas .q span{font-size:13px;color:var(--mudo)}
+.faixas .tl{position:relative;height:18px;background:var(--cinza);border-radius:2px}
+.faixas .tl i{position:absolute;top:0;bottom:0;border-radius:2px;background:var(--pc)}
+.faixas .tl em{position:absolute;top:-1px;font-style:normal;font-size:11px;font-weight:700;color:var(--tinta);white-space:nowrap}
+.faixas li.cab-f{padding-top:8px;padding-bottom:6px;background:var(--cinza)}
+.eixo{display:grid;grid-template-columns:repeat(12,1fr);font-size:10px;color:var(--fraco);text-transform:uppercase;letter-spacing:.3px}
+.obsl{list-style:none;margin:0;padding:0;counter-reset:o}
+.obsl li{counter-increment:o;display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;padding:10px 0;border-top:1px solid var(--linha);font-size:15px;line-height:1.55}
+.obsl li:first-child{border-top:0}
+.obsl li:before{content:counter(o);width:26px;height:26px;border-radius:50%;background:var(--escuro);color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.duas{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px}
+.tip{position:absolute;top:0;left:0;z-index:5;pointer-events:none;background:#000;color:#fff;font-size:13px;line-height:1.5;padding:9px 11px;border-radius:4px;max-width:250px;box-shadow:0 4px 16px rgba(0,0,0,.18);opacity:0;transition:opacity .1s}
+.tip.on{opacity:1}
+.tip b{display:block;font-size:14px;margin-bottom:2px}
+.fonte{font-size:13px;line-height:1.5;color:var(--mudo);margin:40px 0 0;padding-top:12px;border-top:1px solid var(--linha)}
+.fonte a{color:var(--vermelho)}
+@media (max-width:980px){
+  .mes-corpo{grid-template-columns:1fr}
+  .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .placar{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .pl:nth-child(3):before{display:none}
+}
+@media (max-width:760px){
+  .wrap{padding:20px max(16px,env(safe-area-inset-right,0px)) 28px max(16px,env(safe-area-inset-left,0px))}
+  .abre,.duas{grid-template-columns:1fr}
+  .metas{padding:12px}
+  .metas .btn-link{margin-left:0}
+  .placar{grid-template-columns:1fr}
+  .pl{padding:18px 20px}
+  .pl+.pl:before{display:block!important;left:20px;right:20px;top:0;bottom:auto;width:auto;height:1px}
+  .filtros{padding:12px}
+  .meses{grid-template-columns:repeat(6,minmax(0,1fr))}
+  .dia{min-height:58px;padding:4px 3px}
+  .dia .num em{display:none}
+  .dia .ev{display:none}
+  .pontos{display:flex}
+  .grade .dsem{padding:6px 3px;font-size:10px;text-align:center}
+  .cards{grid-template-columns:1fr}
+  .faixas li{grid-template-columns:1fr}
+  .faixas li.cab-f>span{display:none}
+  .mapa th.nm{width:92px;font-size:11.5px}
+  .mapa td{font-size:11px;height:28px}
+  .mapa th{font-size:9px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style></head><body>
+<script>if(window.parent!==window)document.documentElement.classList.add('em-iframe');</script>
+<div class="wrap">
+  <div class="abre">
+    <h1><span>Calendário 2027:</span> o ano do futebol brasileiro</h1>
+    <p class="lede">Todas as datas do futebol masculino profissional no Brasil em 2027, segundo o calendário da CBF. Escolha as competições do seu clube e veja o ano mês a mês, com as datas FIFA, a pausa para a Copa do Mundo Feminina e os recessos.</p>
+  </div>
+  <div class="metas">
+    <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>Versão de 9/10/2026</span>
+    <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="m12 7.5 4 3-1.5 4.5h-5L8 10.5z"/></svg>11 competições · masculino profissional</span>
+    <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 8v5M12 16.5v.01"/><circle cx="12" cy="12" r="8.5"/></svg>Datas-base, sujeitas às tabelas</span>
+    <button type="button" class="btn-link" id="copiar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4.5 4.5 0 0 0 6.4 0l3.2-3.2a4.5 4.5 0 0 0-6.4-6.4L11.8 5.8"/><path d="M14 10a4.5 4.5 0 0 0-6.4 0l-3.2 3.2a4.5 4.5 0 0 0 6.4 6.4l1.4-1.4"/></svg><span>Copiar link</span></button>
+  </div>
+  <div class="placar" role="group" aria-label="Números-chave">
+    <div class="pl"><div class="n">27/1<small>→</small>1/12</div><div class="t">Série A do Brasileirão, em 38 datas. A Série B vai de 20/3 a 27/11, com playoff no fim</div><a href="#competicoes" data-ir="competicoes">Ver as competições →</a></div>
+    <div class="pl"><div class="n">10/1<small>→</small>7/3</div><div class="t">Estaduais em 11 datas, terminando obrigatoriamente até 7 de março</div><a href="#mes" data-ir="mes" data-mes="1">Ver janeiro →</a></div>
+    <div class="pl"><div class="n">40 dias</div><div class="t">sem Série A no meio do ano (18/6 a 27/7), durante a Copa do Mundo Feminina no Brasil</div><a href="#pausas" data-ir="pausas">Ver as pausas →</a></div>
+    <div class="pl"><div class="n">5/12</div><div class="t">final da Copa do Brasil, em jogo único, quatro dias depois da última rodada da Série A</div><a href="#mes" data-ir="mes" data-mes="12">Ver dezembro →</a></div>
+  </div>
+
+  <nav class="nav" aria-label="Seções"><div class="abas" role="tablist" id="abas">
+    <button type="button" role="tab" data-aba="mes" aria-selected="true">Mês a mês</button>
+    <button type="button" role="tab" data-aba="ano" aria-selected="false">O ano inteiro</button>
+    <button type="button" role="tab" data-aba="competicoes" aria-selected="false">Competições</button>
+    <button type="button" role="tab" data-aba="pausas" aria-selected="false">Pausas e regras</button>
+  </div></nav>
+
+  <!-- ========== MÊS A MÊS ========== -->
+  <section class="painel" id="p-mes" role="tabpanel">
+    <div class="filtros">
+      <div class="topo"><span class="rotulo">Monte o calendário do seu clube</span>
+        <div class="presets" id="presets" role="group" aria-label="Atalhos">
+          <button type="button" class="preset" data-p="tudo">Tudo</button>
+          <button type="button" class="preset" data-p="A">Clube da Série A</button>
+          <button type="button" class="preset" data-p="B">Série B</button>
+          <button type="button" class="preset" data-p="C">Série C</button>
+          <button type="button" class="preset" data-p="D">Série D</button>
+        </div>
+        <div class="acoes"><button type="button" class="lnk" id="limpar">Limpar</button></div>
+      </div>
+      <div class="comps" id="comps" role="group" aria-label="Competições"></div>
+      <label class="chave"><input type="checkbox" id="mostraPausas" checked> Mostrar datas FIFA, Copa do Mundo Feminina e recessos</label>
+    </div>
+    <div class="meses" id="meses" role="group" aria-label="Mês"></div>
+
+    <div class="mes-cab"><h2 id="mesNome"></h2><div class="setas"><button type="button" class="seta" id="ant" aria-label="Mês anterior">←</button><button type="button" class="seta" id="prox" aria-label="Próximo mês">→</button></div></div>
+    <p class="resumo-mes" id="mesResumo"></p>
+    <div class="mes-corpo">
+      <div>
+        <div class="grade" id="grade" role="grid" aria-label="Dias do mês"></div>
+        <div class="legenda-p" id="legP"></div>
+      </div>
+      <div>
+        <div class="agenda-cab"><span class="rotulo">Datas do mês</span><span class="rotulo" id="agCont" style="color:var(--fraco)"></span></div>
+        <ol class="agenda" id="agenda"></ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== O ANO INTEIRO ========== -->
+  <section class="painel" id="p-ano" role="tabpanel" hidden>
+    <div class="secao">
+      <h2>O ritmo do ano</h2>
+      <p class="sub">Cada traço é uma data-base de jogo. As faixas mostram as datas FIFA (azul) e a Copa do Mundo Feminina no Brasil (rosa). Passe o dedo ou o mouse sobre uma linha para ver a data.</p>
+      <div class="caixa linha-ano" id="linhaAno"></div>
+    </div>
+    <div class="secao">
+      <h2>Datas por mês</h2>
+      <p class="sub">Quantas datas-base cada competição tem em cada mês. Os meses mais cheios são maio (30 datas), agosto (29) e abril (27).</p>
+      <div class="tw"><table class="mapa" id="mapa"></table></div>
+    </div>
+  </section>
+
+  <!-- ========== COMPETIÇÕES ========== -->
+  <section class="painel" id="p-competicoes" role="tabpanel" hidden>
+    <h2>Início, fim e decisões de cada competição</h2>
+    <p class="sub">Datas-base previstas. As tabelas detalhadas, com jogos e horários, saem ao longo de cada torneio.</p>
+    <div class="cards" id="cards"></div>
+  </section>
+
+  <!-- ========== PAUSAS E REGRAS ========== -->
+  <section class="painel" id="p-pausas" role="tabpanel" hidden>
+    <div class="secao">
+      <h2>Pausas, janelas e datas especiais</h2>
+      <p class="sub">Períodos sem jogos das Séries A e B, datas FIFA e janelas de registro de atletas ao longo de 2027.</p>
+      <ul class="faixas" id="faixas"></ul>
+    </div>
+    <div class="secao">
+      <h2>O que diz o calendário</h2>
+      <p class="sub">As observações da CBF que acompanham o calendário.</p>
+      <ol class="obsl">
+        <li>As Séries A, B e D mantêm o formato de 2026. A Série C e a Copa do Brasil têm as mudanças já previstas.</li>
+        <li>Os Estaduais começam em 10 de janeiro e terminam impreterivelmente até 7 de março (Estaduais com clubes da Série A).</li>
+        <li>Depois da temporada de 2026, os clubes da Série A têm 15 dias de recesso e os da Série B, 23.</li>
+        <li>A pré-temporada de 2027 tem 15 dias.</li>
+        <li>No meio de 2027 há recesso de 18 dias para os clubes das Séries A e B.</li>
+        <li>Também no meio do ano há uma intertemporada de 15 dias para os clubes das Séries A e B.</li>
+        <li>No fim de 2027, o recesso é de 15 dias para a Série A e de 23 dias para a Série B.</li>
+        <li>A Série A não joga nas datas FIFA nem nos períodos previstos para amistosos das seleções.</li>
+        <li>Clubes da Série A que disputam a Recopa Sul-Americana ou a Fase 2 da Libertadores jogam a Fase 5 da Copa do Brasil na 2ª janela (datas-base 7 e 8).</li>
+        <li>Clubes nas oitavas da Copa do Brasil cujos estádios estiverem cedidos à Copa do Mundo Feminina jogam na 1ª janela (datas-base 9 e 10).</li>
+        <li>As competições masculinas param para a Copa do Mundo Feminina da FIFA 2027, disputada no Brasil, que usa estádios e estrutura dos clubes.</li>
+        <li>O calendário traz as datas-base de cada competição e fase. As tabelas detalhadas são divulgadas com o andamento dos torneios.</li>
+      </ol>
+    </div>
+  </section>
+
+  <p class="fonte">Fonte: <a href="https://stcbfsiteprdimgbrs.blob.core.windows.net/img-site/cdn/Calendario_do_Futebol_do_Brasil_2027_Masculino_Profissional_72d490f3c6.pdf" target="_blank" rel="noopener">CBF – Calendário do Futebol do Brasil 2027, masculino profissional</a>, versão de 9/10/2026. São datas-base: o dia exato de cada jogo sai nas tabelas detalhadas de cada competição.</p>
+</div>
+<div class="tip" id="tip" role="tooltip"></div>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id);};
+  var DADOS=[["CBR","01-06","Fase 1"],["EST","01-10","Data 1"],["EST","01-13","Data 2"],["EST","01-17","Data 3"],["EST","01-20","Data 4"],["SCB","01-24","Jogo único"],["EST","01-24","Data 5"],["BSA","01-27","Data 1"],["CBR","01-27","Fase 2"],["EST","01-31","Data 6"],["BSA","02-03","Data 2"],["CBR","02-03","Fase 3"],["EST","02-06","Data 7"],["BSA","02-10","Data 3"],["CBR","02-10","Fase 4"],["EST","02-14","Data 8"],["LIB","02-17","Fase 2 · ida"],["REC","02-17","Jogo 1"],["BSA","02-17","Data 4"],["EST","02-21","Data 9"],["LIB","02-24","Fase 2 · volta"],["REC","02-24","Jogo 2"],["CBR","02-24","Fase 5 · ida (1ª janela)"],["EST","02-28","Data 10"],["LIB","03-03","Fase 3 · ida"],["CBR","03-03","Fase 5 · volta (1ª janela)"],["EST","03-07","Data 11"],["LIB","03-10","Fase 3 · volta"],["BSA","03-10","Data 5"],["BSA","03-14","Data 6"],["CBR","03-17","Fase 5 · ida (2ª janela)"],["BSB","03-20","Data 1"],["BSA","03-21","Data 7"],["REG","03-24","Data 1"],["REG","03-28","Data 2"],["BSB","03-30","Data 2"],["BSA","04-01","Data 8"],["BSB","04-03","Data 3"],["BSA","04-04","Data 9"],["BSC","04-04","Data 1"],["BSD","04-04","Data 1"],["LIB","04-07","Grupos, rodada 1"],["CSU","04-07","Grupos, rodada 1"],["REG","04-07","Data 3"],["BSB","04-10","Data 4"],["BSA","04-11","Data 10"],["BSC","04-11","Data 2"],["BSD","04-11","Data 2"],["LIB","04-14","Grupos, rodada 2"],["CSU","04-14","Grupos, rodada 2"],["REG","04-14","Data 4"],["BSB","04-17","Data 5"],["BSA","04-18","Data 11"],["BSC","04-18","Data 3"],["BSD","04-18","Data 3"],["CBR","04-21","Fase 5 · volta (2ª janela)"],["BSB","04-24","Data 6"],["BSA","04-25","Data 12"],["BSC","04-25","Data 4"],["BSD","04-25","Data 4"],["LIB","04-28","Grupos, rodada 3"],["CSU","04-28","Grupos, rodada 3"],["REG","04-28","Data 5"],["BSB","05-01","Data 7"],["BSA","05-02","Data 13"],["BSC","05-02","Data 5"],["BSD","05-02","Data 5"],["LIB","05-05","Grupos, rodada 4"],["CSU","05-05","Grupos, rodada 4"],["REG","05-05","Data 6"],["BSB","05-08","Data 8"],["BSA","05-09","Data 14"],["BSC","05-09","Data 6"],["BSD","05-09","Data 6"],["CBR","05-12","Oitavas · ida (1ª janela)"],["BSB","05-15","Data 9"],["BSA","05-16","Data 15"],["BSC","05-16","Data 7"],["BSD","05-16","Data 7"],["LIB","05-19","Grupos, rodada 5"],["CSU","05-19","Grupos, rodada 5"],["REG","05-19","Data 7"],["BSB","05-22","Data 10"],["BSA","05-23","Data 16"],["BSC","05-23","Data 8"],["BSD","05-23","Data 8"],["LIB","05-26","Grupos, rodada 6"],["CSU","05-26","Grupos, rodada 6"],["REG","05-26","Data 8"],["BSB","05-29","Data 11"],["BSA","05-30","Data 17"],["BSC","05-30","Data 9"],["BSD","05-30","Data 9"],["CBR","06-02","Oitavas · volta (1ª janela)"],["BSB","06-05","Data 12"],["BSA","06-06","Data 18"],["BSC","06-06","Data 10"],["BSD","06-06","Data 10"],["REG","06-09","Data 9"],["BSC","06-13","Data 11"],["BSD","06-13","Data 11"],["REG","06-13","Data 10"],["BSB","06-15","Data 13"],["BSA","06-17","Data 19"],["BSC","06-18","Data 12"],["BSD","06-18","Data 12"],["CBR","06-20","Oitavas · ida (2ª janela)"],["CBR","06-23","Oitavas · volta (2ª janela)"],["BSC","07-11","Data 13"],["BSD","07-11","Data 13"],["BSC","07-18","Data 14"],["BSD","07-18","Data 14"],["CSU","07-21","Playoff · ida"],["BSC","07-24","Data 15"],["BSD","07-24","Data 15"],["BSB","07-27","Data 14"],["CSU","07-28","Playoff · volta"],["BSA","07-28","Data 20"],["BSB","07-31","Data 15"],["BSA","08-01","Data 21"],["BSC","08-01","Data 16"],["BSD","08-01","Data 16"],["BSB","08-03","Data 16"],["BSA","08-04","Data 22"],["BSC","08-04","Data 17"],["BSB","08-07","Data 17"],["BSA","08-08","Data 23"],["BSC","08-08","Data 18"],["BSD","08-08","Data 17"],["LIB","08-11","Oitavas · ida"],["CSU","08-11","Oitavas · ida"],["BSB","08-14","Data 18"],["BSA","08-15","Data 24"],["BSC","08-15","Data 19"],["BSD","08-15","Data 18"],["LIB","08-18","Oitavas · volta"],["CSU","08-18","Oitavas · volta"],["BSB","08-21","Data 19"],["CBR","08-22","Quartas · ida"],["BSC","08-22","Data 20"],["BSD","08-22","Data 19"],["BSA","08-25","Data 25"],["BSD","08-25","Data 20 · Playoff ida"],["BSB","08-28","Data 20"],["CBR","08-29","Quartas · volta"],["BSC","08-29","Data 21"],["BSD","08-29","Data 21"],["BSB","08-31","Data 21"],["BSA","09-01","Data 26"],["BSD","09-01","Data 22 · Playoff volta"],["BSB","09-04","Data 22"],["BSA","09-05","Data 27"],["BSC","09-05","Data 22"],["BSD","09-05","Data 23"],["LIB","09-08","Quartas · ida"],["CSU","09-08","Quartas · ida"],["BSB","09-11","Data 23"],["BSA","09-12","Data 28"],["BSC","09-12","Data 23"],["BSD","09-12","Data 24"],["BSB","09-14","Data 24"],["LIB","09-15","Quartas · volta"],["CSU","09-15","Quartas · volta"],["BSB","09-18","Data 25"],["BSA","09-19","Data 29"],["BSC","09-19","Data 24"],["BSB","09-21","Data 26"],["BSB","09-25","Data 27"],["BSC","09-26","Data 25"],["BSB","10-02","Data 28"],["BSC","10-03","Data 26"],["BSB","10-05","Data 29"],["BSA","10-07","Data 30"],["BSB","10-09","Data 30"],["BSA","10-10","Data 31"],["BSC","10-10","Data 27"],["BSB","10-12","Data 31"],["LIB","10-13","Semifinal · ida"],["CSU","10-13","Semifinal · ida"],["BSC","10-13","Data 28"],["BSB","10-16","Data 32"],["BSA","10-17","Data 32"],["BSC","10-17","Data 29"],["BSB","10-19","Data 33"],["LIB","10-20","Semifinal · volta"],["CSU","10-20","Semifinal · volta"],["BSB","10-23","Data 34"],["BSA","10-24","Data 33"],["BSC","10-24","Data 30 · Final ida"],["BSA","10-27","Data 34"],["BSB","10-30","Data 35"],["CBR","10-31","Semifinal · ida"],["BSC","10-31","Data 31 · Final volta"],["BSA","11-03","Data 35"],["BSB","11-06","Data 36"],["CBR","11-07","Semifinal · volta"],["BSB","11-13","Data 37"],["CSU","11-20","Final"],["BSB","11-20","Data 38 · Rodada final"],["BSA","11-21","Data 36"],["BSB","11-23","Data 39 · Playoff ida"],["LIB","11-27","Final"],["BSB","11-27","Data 40 · Playoff volta"],["BSA","11-28","Data 37"],["BSA","12-01","Data 38 · Rodada final"],["CBR","12-05","Final (jogo único)"]];
+  var C={BSA:{n:'Série A',l:'Brasileirão Série A',cor:'#1F6FD1'},BSB:{n:'Série B',l:'Brasileirão Série B',cor:'#8A4B14'},BSC:{n:'Série C',l:'Brasileirão Série C',cor:'#B07F00'},BSD:{n:'Série D',l:'Brasileirão Série D',cor:'#2F5A23'},
+    CBR:{n:'Copa do Brasil',s:'Copa BR',l:'Copa do Brasil',cor:'#F0B400',claro:1},EST:{n:'Estaduais',l:'Estaduais',cor:'#CB0003'},REG:{n:'Regionais',l:'Copas regionais',cor:'#13A257'},
+    LIB:{n:'Libertadores',l:'Conmebol Libertadores',cor:'#1A1A1A'},CSU:{n:'Sul-Americana',l:'Conmebol Sul-Americana',cor:'#707070'},SCB:{n:'Supercopa',l:'Supercopa do Brasil',cor:'#6E3FA3'},REC:{n:'Recopa',l:'Recopa Sul-Americana',cor:'#A3A3A3',claro:1}};
+  var ORDEM=['BSA','BSB','BSC','BSD','CBR','EST','REG','LIB','CSU','SCB','REC'];
+  var PRESETS={tudo:ORDEM,A:['BSA','CBR','EST','LIB','CSU','SCB','REC'],B:['BSB','CBR','EST','REG','CSU'],C:['BSC','CBR','EST','REG'],D:['BSD','CBR','EST','REG']};
+  var PER=[{k:'fifa',n:'Data FIFA',a:'03-22',b:'03-30'},{k:'fifa',n:'Data FIFA',a:'06-07',b:'06-15'},{k:'fifa',n:'Data FIFA',a:'09-20',b:'10-05'},{k:'fifa',n:'Data FIFA',a:'11-08',b:'11-16'},
+    {k:'fem',n:'Copa do Mundo Feminina no Brasil',a:'06-24',b:'07-25'}];
+  var FAIXAS=[
+    {n:'Janela de registros',s:'1ª janela de transferências',a:'01-04',b:'03-02',c:'#F2C94C'},
+    {n:'Data FIFA',s:'Sem Série A',a:'03-22',b:'03-30',c:'#8DB7E2'},
+    {n:'Data FIFA',s:'Sem Série A',a:'06-07',b:'06-15',c:'#8DB7E2'},
+    {n:'Copa do Mundo Feminina',s:'No Brasil, com final em 25/7',a:'06-24',b:'07-25',c:'#E79AD9'},
+    {n:'Recesso de 18 dias',s:'Séries A e B',a:'06-24',b:'07-11',c:'#9FCB86'},
+    {n:'Intertemporada de 15 dias',s:'Séries A e B',a:'07-12',b:'07-26',c:'#C8E3B6'},
+    {n:'Janela de registros',s:'2ª janela de transferências',a:'07-19',b:'09-10',c:'#F2C94C'},
+    {n:'Data FIFA',s:'Sem Série A',a:'09-20',b:'10-05',c:'#8DB7E2'},
+    {n:'Data FIFA',s:'Sem Série A',a:'11-08',b:'11-16',c:'#8DB7E2'},
+    {n:'Datas reserva (escape)',s:'Para jogos adiados',a:'11-18',b:'11-24',c:'#4D4D4D',pts:['11-18','11-24']},
+    {n:'Recesso da Série B',s:'23 dias',a:'11-28',b:'12-20',c:'#9FCB86'},
+    {n:'Recesso da Série A',s:'15 dias',a:'12-06',b:'12-20',c:'#9FCB86'},
+    {n:'Copa Intercontinental',s:'Previsão',a:'12-08',b:'12-15',c:'#1A1A1A'},
+    {n:'Pré-temporada de 2028',s:'A partir de 21/12',a:'12-21',b:'12-31',c:'#C8E3B6'}];
+  var MARCAS={'01-01':'Confraternização Universal','01-04':'Abre a janela de registros','01-05':'Fim da pré-temporada (15 dias)','02-07':'Carnaval','02-08':'Carnaval','02-09':'Carnaval','03-02':'Fecha a janela de registros',
+    '03-26':'Paixão de Cristo','03-28':'Páscoa','06-24':'Começa a Copa do Mundo Feminina · início do recesso de 18 dias (A e B) · São João','07-11':'Fim do recesso de 18 dias','07-12':'Início da intertemporada de 15 dias (A e B)','07-19':'Abre a janela de registros',
+    '07-25':'Final da Copa do Mundo Feminina','07-26':'Fim da intertemporada','09-10':'Fecha a janela de registros','11-18':'Data reserva (escape)','11-24':'Data reserva (escape)','11-28':'Início do recesso da Série B (23 dias)',
+    '12-06':'Início do recesso da Série A (15 dias)','12-08':'Início da Copa Intercontinental (previsão)','12-15':'Final da Copa Intercontinental (previsão)','12-20':'Fim dos recessos','12-21':'Início da pré-temporada de 2028','12-25':'Natal'};
+  var FERIADO={'01-01':'Ano-novo','02-07':'Carnaval','02-08':'Carnaval','02-09':'Carnaval','03-26':'Paixão','03-28':'Páscoa','06-24':'S. João','12-25':'Natal'};
+  var MESES=['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+  var SEM=['dom','seg','ter','qua','qui','sex','sáb'];
+  function dt(s){var p=s.split('-');return new Date(2027,+p[0]-1,+p[1]);}
+  function doy(s){return Math.round((dt(s)-new Date(2027,0,1))/864e5);}
+  function curta(s){var p=s.split('-');return (+p[1])+'/'+(+p[0]);}
+  function key(m,d){return String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');}
+  function perDe(k){for(var i=0;i<PER.length;i++){var p=PER[i];if(k>=p.a&&k<=p.b)return p;}return null;}
+  function recesso(k){return (k>='06-24'&&k<='07-26')||(k>='12-06'&&k<='12-20');}
+  var POR={};DADOS.forEach(function(e){(POR[e[1]]=POR[e[1]]||[]).push(e);});
+  var tip=$('tip');
+  function mostraTip(h,x,y){tip.innerHTML=h;tip.classList.add('on');var w=tip.offsetWidth,hh=tip.offsetHeight;
+    tip.style.left=Math.min(Math.max(8,x-w/2),document.documentElement.clientWidth-w-8)+'px';tip.style.top=(y-hh-12<scrollY+4?y+18:y-hh-12)+'px';}
+  function escondeTip(){tip.classList.remove('on');}
+
+  /* ---------- estado ---------- */
+  var sel={};ORDEM.forEach(function(k){sel[k]=true;});
+  var mes=1,diaSel=null,pausas=true;
+  try{var g=JSON.parse(localStorage.getItem('cal27-sel')||'null');if(g&&typeof g==='object')ORDEM.forEach(function(k){sel[k]=!!g[k];});}catch(e){}
+  function salva(){try{localStorage.setItem('cal27-sel',JSON.stringify(sel));}catch(e){}}
+  function ativos(){return ORDEM.filter(function(k){return sel[k];});}
+
+  /* ---------- filtros ---------- */
+  function contaComp(k){return DADOS.filter(function(e){return e[0]===k;}).length;}
+  $('comps').innerHTML=ORDEM.map(function(k){return '<button type="button" class="comp" data-k="'+k+'" style="--c:'+C[k].cor+'"><i></i>'+C[k].n+' <small>'+contaComp(k)+'</small></button>';}).join('');
+  function pintaFiltros(){[].forEach.call($('comps').children,function(b){b.setAttribute('aria-pressed',!!sel[b.dataset.k]);});
+    var a=ativos().slice().sort().join();[].forEach.call($('presets').children,function(b){b.setAttribute('aria-pressed',PRESETS[b.dataset.p].slice().sort().join()===a);});}
+  $('comps').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;sel[b.dataset.k]=!sel[b.dataset.k];salva();atualiza();});
+  $('presets').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;ORDEM.forEach(function(k){sel[k]=PRESETS[b.dataset.p].indexOf(k)>=0;});salva();atualiza();});
+  $('limpar').addEventListener('click',function(){ORDEM.forEach(function(k){sel[k]=false;});salva();atualiza();});
+  $('mostraPausas').addEventListener('change',function(){pausas=this.checked;desenhaMes();});
+
+  /* ---------- seletor de meses ---------- */
+  function eventosMes(m){var a=ativos();return DADOS.filter(function(e){return +e[1].slice(0,2)===m&&a.indexOf(e[0])>=0;});}
+  function diasComJogo(m){var s={};eventosMes(m).forEach(function(e){s[e[1]]=1;});return Object.keys(s).length;}
+  function desenhaMeses(){var cont=[],mx=1;for(var m=1;m<=12;m++){cont.push(diasComJogo(m));mx=Math.max(mx,cont[m-1]);}
+    $('meses').innerHTML=cont.map(function(c,i){return '<button type="button" class="mes" data-m="'+(i+1)+'" aria-pressed="'+(mes===i+1)+'" aria-label="'+MESES[i]+': '+c+' dias com jogos"><b>'+MESES[i].slice(0,3)+'</b><span class="barra" aria-hidden="true"><i style="height:'+Math.max(2,22*c/mx)+'px"></i></span><small>'+c+(c===1?' dia':' dias')+'</small></button>';}).join('');}
+  $('meses').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;mes=+b.dataset.m;diaSel=null;desenhaMeses();desenhaMes();});
+  $('ant').addEventListener('click',function(){if(mes>1){mes--;diaSel=null;desenhaMeses();desenhaMes();}});
+  $('prox').addEventListener('click',function(){if(mes<12){mes++;diaSel=null;desenhaMeses();desenhaMes();}});
+
+  /* ---------- mês: grade + agenda ---------- */
+  function desenhaMes(){
+    var a=ativos(),n=new Date(2027,mes,0).getDate(),ini=(new Date(2027,mes-1,1).getDay()+6)%7;
+    $('mesNome').textContent=MESES[mes-1].charAt(0).toUpperCase()+MESES[mes-1].slice(1)+' de 2027';
+    $('ant').disabled=mes===1;$('prox').disabled=mes===12;
+    var h=['seg','ter','qua','qui','sex','sáb','dom'].map(function(d){return '<div class="dsem" role="columnheader">'+d+'</div>';}).join('');
+    for(var i=0;i<ini;i++)h+='<div class="dia vazio" aria-hidden="true"></div>';
+    var itens=[],totalEv=0,comps={};
+    for(var d=1;d<=n;d++){var k=key(mes,d),evs=(POR[k]||[]).filter(function(e){return a.indexOf(e[0])>=0;}),p=pausas?perDe(k):null,wd=dt(k).getDay(),fds=wd===0||wd===6;
+      var cls='dia'+(fds?' fds':'')+(p?' p-'+p.k:(pausas&&recesso(k)?' p-rec':''))+(diaSel===d?' sel':'');
+      var marca=FERIADO[k]||'';
+      var lab=d+' de '+MESES[mes-1]+(evs.length?': '+evs.map(function(e){return C[e[0]].n+' '+e[2];}).join('; '):': sem jogos das competições escolhidas');
+      h+='<button type="button" class="'+cls+'" data-d="'+d+'" aria-label="'+lab+'"><span class="num">'+d+(marca?'<em>'+marca+'</em>':'')+'</span>'+
+        evs.map(function(e){return '<span class="ev'+(C[e[0]].claro?' claro':'')+'" style="--c:'+C[e[0]].cor+'">'+(C[e[0]].s||C[e[0]].n)+'</span>';}).join('')+
+        '<span class="pontos" aria-hidden="true">'+evs.map(function(e){return '<i style="--c:'+C[e[0]].cor+'"></i>';}).join('')+'</span></button>';
+      var notas=[];if(MARCAS[k])notas.push(MARCAS[k]);
+      if(evs.length||notas.length){itens.push({d:d,k:k,evs:evs,notas:notas,fds:fds,wd:wd,p:p});}
+      totalEv+=evs.length;evs.forEach(function(e){comps[e[0]]=1;});}
+    $('grade').innerHTML=h;
+    $('agenda').innerHTML=itens.length?itens.map(function(it){
+      return '<li id="ag-'+it.d+'" class="'+(diaSel===it.d?'sel':'')+'"><span class="dt'+(it.fds?' fds':'')+'"><b>'+it.d+'</b><small>'+SEM[it.wd]+'</small></span><div class="its">'+
+        it.evs.map(function(e){return '<div class="it" style="--c:'+C[e[0]].cor+'"><i></i><div><b>'+C[e[0]].n+'</b> <span>'+e[2]+'</span></div></div>';}).join('')+
+        it.notas.map(function(t){var pc=/FIFA/.test(t)?'#8DB7E2':/Feminina/.test(t)?'#E79AD9':/recesso|intertemp|pré-temp|Fim dos/i.test(t)?'#9FCB86':/janela/i.test(t)?'#F2C94C':'#CFCFCF';return '<span class="nota-dia" style="--pc:'+pc+'">'+t+'</span>';}).join('')+'</div></li>';}).join('')
+      :'<li class="vazia">Nenhuma data das competições escolhidas neste mês.</li>';
+    var dias=itens.filter(function(i){return i.evs.length;}).length;
+    $('agCont').textContent=dias+(dias===1?' dia com jogos':' dias com jogos');
+    var fifa=PER.filter(function(p){return p.k==='fifa'&&+p.a.slice(0,2)<=mes&&+p.b.slice(0,2)>=mes;});
+    var r=a.length?'<b>'+dias+(dias===1?' dia':' dias')+' com jogos</b> das competições escolhidas'+(Object.keys(comps).length?' ('+ORDEM.filter(function(k){return comps[k];}).map(function(k){return C[k].n;}).join(', ')+')':'')+'.':'Escolha ao menos uma competição acima.';
+    if(fifa.length)r+=' Data FIFA de '+fifa.map(function(p){return curta(p.a)+' a '+curta(p.b);}).join(' e ')+'.';
+    if(mes===6)r+=' A Copa do Mundo Feminina começa em 24/6 e as Séries A e B entram em recesso.';
+    if(mes===7)r+=' Mês da Copa do Mundo Feminina no Brasil (final em 25/7). As Séries A e B voltam no fim do mês.';
+    $('mesResumo').innerHTML=r;
+    var lg='';if(pausas)lg='<span><i style="background:var(--fifa)"></i>Data FIFA</span><span><i style="background:var(--fem)"></i>Copa do Mundo Feminina</span><span><i style="background:var(--rec)"></i>Recesso ou intertemporada</span>';
+    $('legP').innerHTML=lg+'<span style="color:var(--vermelho);font-weight:700">Dia em vermelho = fim de semana</span>';
+  }
+  $('grade').addEventListener('click',function(e){var b=e.target.closest('.dia:not(.vazio)');if(!b)return;diaSel=+b.dataset.d;desenhaMes();
+    var li=$('ag-'+diaSel);if(li){var r=li.getBoundingClientRect();if(window.parent!==window)parent.postMessage({type:'cal-cbf:rolar',y:r.top+scrollY-12,suave:1},'*');else if(r.top<0||r.bottom>innerHeight)li.scrollIntoView({behavior:'smooth',block:'nearest'});}});
+
+  function atualiza(){pintaFiltros();desenhaMeses();desenhaMes();}
+
+  /* ---------- o ano inteiro ---------- */
+  function desenhaAno(){
+    var el=$('linhaAno'),W=Math.max(300,el.clientWidth-32),peq=W<560,lw=peq?78:132,rh=peq?22:26,top=22,H=top+ORDEM.length*rh+6,pw=W-lw-6,dx=pw/365;
+    var X=function(s){return lw+doy(s)*dx;};
+    var s='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Datas de cada competição ao longo de 2027">';
+    PER.forEach(function(p){s+='<rect x="'+X(p.a)+'" y="'+(top-4)+'" width="'+Math.max(2,(doy(p.b)-doy(p.a)+1)*dx)+'" height="'+(H-top)+'" fill="'+(p.k==='fifa'?'#D6E6F7':'#F8DDF3')+'"/>';});
+    for(var m=0;m<12;m++){var x=X(key(m+1,1));s+='<line x1="'+x+'" x2="'+x+'" y1="'+(top-6)+'" y2="'+H+'" stroke="#E6E6E6"/><text x="'+(x+(peq?2:4))+'" y="12" font-size="'+(peq?9:11)+'" font-weight="700" fill="#4D4D4D">'+(peq?MESES[m].charAt(0).toUpperCase():MESES[m].slice(0,3).toUpperCase())+'</text>';}
+    ORDEM.forEach(function(k,i){var y=top+i*rh;
+      s+='<text x="0" y="'+(y+rh/2+4)+'" font-size="'+(peq?11:13)+'" font-weight="700" fill="#1A1A1A">'+C[k].n+'</text>';
+      DADOS.filter(function(e){return e[0]===k;}).forEach(function(e){s+='<rect x="'+(X(e[1])-(peq?1:1.5))+'" y="'+(y+4)+'" width="'+(peq?2:3)+'" height="'+(rh-8)+'" fill="'+C[k].cor+'"/>';});});
+    s+='<rect x="'+lw+'" y="'+top+'" width="'+pw+'" height="'+(H-top)+'" fill="transparent"/></svg>';
+    el.innerHTML=s;var svg=el.firstChild;
+    function mv(ev){var r=svg.getBoundingClientRect(),k=W/r.width,cx=(ev.clientX-r.left)*k,cy=(ev.clientY-r.top)*k,i=Math.floor((cy-top)/rh);
+      if(i<0||i>=ORDEM.length||cx<lw){escondeTip();return;}
+      var c=ORDEM[i],dd=Math.round((cx-lw)/dx),best=null,bd=99;
+      DADOS.forEach(function(e){if(e[0]!==c)return;var q=Math.abs(doy(e[1])-dd);if(q<bd){bd=q;best=e;}});
+      if(!best||bd>(peq?9:6)){escondeTip();return;}
+      var wd=SEM[dt(best[1]).getDay()];
+      mostraTip('<b>'+C[c].l+'</b>'+curta(best[1])+' ('+wd+') · '+best[2],r.left+X(best[1])/k+scrollX,r.top+scrollY+(top+i*rh)/k);}
+    svg.addEventListener('pointermove',mv);svg.addEventListener('pointerdown',mv);svg.addEventListener('pointerleave',escondeTip);
+    // mapa por mês
+    var tot=[0,0,0,0,0,0,0,0,0,0,0,0];
+    var t='<thead><tr><th class="nm"></th>'+MESES.map(function(m){return '<th>'+m.slice(0,3)+'</th>';}).join('')+'</tr></thead><tbody>';
+    ORDEM.forEach(function(k){t+='<tr><th class="nm" style="box-shadow:inset 4px 0 0 '+C[k].cor+';padding-left:10px" title="'+C[k].l+'">'+(innerWidth<760&&C[k].s?C[k].s:C[k].n)+'</th>';
+      for(var m=1;m<=12;m++){var c=DADOS.filter(function(e){return e[0]===k&&+e[1].slice(0,2)===m;}).length;tot[m-1]+=c;
+        t+=c?'<td style="background:'+C[k].cor+';color:'+(C[k].claro?'#1A1A1A':'#fff')+';opacity:'+(0.45+0.55*Math.min(1,c/5)).toFixed(2)+'">'+c+'</td>':'<td class="z">·</td>';}
+      t+='</tr>';});
+    t+='<tr class="tot"><th class="nm">Total</th>'+tot.map(function(c){return '<td>'+c+'</td>';}).join('')+'</tr></tbody>';
+    $('mapa').innerHTML=t;
+  }
+
+  /* ---------- competições ---------- */
+  var DEST={BSA:/final|Data 1$/i,BSB:/Playoff|final|Data 1$/i,BSC:/Final|Data 1$/i,BSD:/Playoff|Data 1$/i,EST:/Data (1|11)$/,REG:/Data (1|10)$/,CBR:/.*/,LIB:/.*/,CSU:/.*/,SCB:/.*/,REC:/.*/};
+  var OBS={BSA:'Não joga nas datas FIFA. Para entre 18/6 e 27/7 por causa da Copa do Mundo Feminina.',BSB:'38 rodadas e playoff em ida e volta (23/11 e 27/11).',BSC:'Final em ida e volta, em 24/10 e 31/10.',BSD:'Playoff em ida e volta (25/8 e 1/9); a competição tem 24 datas-base.',
+    CBR:'Fase 5 e oitavas têm duas janelas de datas, conforme a agenda internacional e os estádios da Copa Feminina. Final em jogo único.',EST:'Terminam obrigatoriamente até 7/3 nos estados com clubes da Série A.',REG:'Dez datas entre o fim de março e a metade de junho, reservadas às copas regionais.',
+    LIB:'Fase 2 e 3 em fevereiro e março; grupos de abril a maio; final em 27/11.',CSU:'Playoff em julho; final em 20/11.',SCB:'Abre a temporada nacional.',REC:'Em ida e volta, em fevereiro.'};
+  function desenhaCards(){
+    $('cards').innerHTML=ORDEM.map(function(k){var l=DADOS.filter(function(e){return e[0]===k;}),a=l[0][1],b=l[l.length-1][1],dest=l.filter(function(e,i){return DEST[k].test(e[2])||i===l.length-1;});
+      var lista=function(arr){return '<ul>'+arr.map(function(e){return '<li><b>'+curta(e[1])+'</b><span>'+e[2]+' · '+SEM[dt(e[1]).getDay()]+'</span></li>';}).join('')+'</ul>';};
+      var resumo=(k==='CBR'||k==='LIB'||k==='CSU'||k==='SCB'||k==='REC')?lista(l.length>8?l.filter(function(e){return !/rodada|Fase [1-4]$/.test(e[2])||e===l[0];}):l):lista(dest);
+      return '<article class="card" style="--c:'+C[k].cor+'"><h3>'+C[k].l+'</h3><div class="per">'+(a===b?curta(a):curta(a)+' → '+curta(b))+' <small>'+l.length+(l.length===1?' data':' datas')+'</small></div>'+
+        '<div><div class="mini" aria-hidden="true">'+l.map(function(e){return '<i style="left:'+(100*doy(e[1])/365).toFixed(2)+'%"></i>';}).join('')+'</div><div class="mini-m" aria-hidden="true"><span>jan</span><span>abr</span><span>jul</span><span>out</span><span>dez</span></div></div>'+
+        '<p class="obs">'+OBS[k]+'</p>'+resumo+(l.length>dest.length&&!(k==='SCB'||k==='REC')?'<details><summary>Ver todas as '+l.length+' datas</summary>'+lista(l)+'</details>':'')+'</article>';}).join('');
+  }
+
+  /* ---------- pausas ---------- */
+  $('faixas').innerHTML='<li class="cab-f" aria-hidden="true"><span></span><div class="eixo">'+MESES.map(function(m){return '<span>'+m.slice(0,3)+'</span>';}).join('')+'</div></li>'+FAIXAS.map(function(f){var a=doy(f.a),b=doy(f.b),w=Math.max(.8,100*(b-a+1)/365);
+    var barras=f.pts?f.pts.map(function(p){return '<i style="left:'+(100*doy(p)/365)+'%;width:.8%"></i>';}).join(''):'<i style="left:'+(100*a/365)+'%;width:'+w+'%"></i>';
+    var txt=curta(f.a)+(f.a!==f.b&&!f.pts?' a '+curta(f.b):'');var dl=100*a/365>70?'right:'+(100-100*a/365+1)+'%':'left:'+(100*b/365+1.2)+'%';
+    return '<li><div class="q"><b>'+f.n+'</b><span>'+f.s+' · '+(f.pts?'18/11 e 24/11':txt)+'</span></div><div class="tl" style="--pc:'+f.c+'" aria-hidden="true">'+barras+'</div></li>';}).join('');
+
+  /* ---------- abas, link, iframe ---------- */
+  var ABAS=['mes','ano','competicoes','pausas'],aba='mes';
+  function abre(k,rolar){if(ABAS.indexOf(k)<0)k='mes';aba=k;escondeTip();
+    [].forEach.call($('abas').children,function(b){b.setAttribute('aria-selected',b.dataset.aba===k);});
+    ABAS.forEach(function(a){$('p-'+a).hidden=a!==k;});
+    if(k==='ano')desenhaAno();if(k==='competicoes')desenhaCards();
+    try{history.replaceState(null,'','#'+k);}catch(e){}
+    if(rolar){var y=document.querySelector('.nav').getBoundingClientRect().top+scrollY;
+      if(window.parent!==window)parent.postMessage({type:'cal-cbf:rolar',y:y},'*');else if(scrollY>y)scrollTo({top:y,behavior:'smooth'});}}
+  $('abas').addEventListener('click',function(e){var b=e.target.closest('button');if(b)abre(b.dataset.aba,true);});
+  document.addEventListener('click',function(e){var a=e.target.closest('[data-ir]');if(!a)return;e.preventDefault();if(a.dataset.mes){mes=+a.dataset.mes;diaSel=null;desenhaMeses();desenhaMes();}abre(a.dataset.ir,true);});
+  function fade(){var t=$('abas');t.parentNode.classList.toggle('mais',t.scrollLeft+t.clientWidth<t.scrollWidth-4);}
+  $('abas').addEventListener('scroll',fade);
+  var paginaPai=null;
+  $('copiar').addEventListener('click',function(){var url=paginaPai||(location.href.split('#')[0]+'#'+aba),sp=this.querySelector('span');
+    var ok=function(){sp.textContent='Link copiado';setTimeout(function(){sp.textContent='Copiar link';},1800);};
+    if(navigator.clipboard)navigator.clipboard.writeText(url).then(ok,function(){sp.textContent=url;});else sp.textContent=url;});
+  var rz,lw0=innerWidth;addEventListener('resize',function(){clearTimeout(rz);rz=setTimeout(function(){fade();if(aba==='ano'&&innerWidth!==lw0)desenhaAno();lw0=innerWidth;},150);});
+  function daHash(){return location.hash.replace('#','').replace(/^aba=/,'').split('&')[0];}
+  // abre no mês atual quando estiver em 2027
+  var hoje=new Date();if(hoje.getFullYear()===2027)mes=hoje.getMonth()+1;
+  atualiza();abre(daHash(),false);fade();
+  addEventListener('hashchange',function(){if(daHash()!==aba)abre(daHash(),false);});
+
+  /* altura automática no iframe */
+  if(window.parent!==window){var last=0;function send(){var h=Math.ceil(document.documentElement.getBoundingClientRect().height);
+    if(h!==last){last=h;parent.postMessage({type:'cal-cbf:altura',altura:h},'*');}}
+    addEventListener('message',function(e){if(e.data&&e.data.type==='cal-cbf:pagina')paginaPai=e.data.url;});
+    parent.postMessage({type:'cal-cbf:pronto'},'*');
+    new ResizeObserver(send).observe(document.documentElement);addEventListener('load',send);setInterval(send,1000);}
+})();
+</script>
+</body></html>
