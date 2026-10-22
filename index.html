@@ -374,10 +374,10 @@ h2{font-size:clamp(22px,2.6vw,28px);letter-spacing:-.02em;line-height:1.15;margi
 
   /* ---------- mês: grade + agenda ---------- */
   function desenhaMes(){
-    var a=ativos(),n=new Date(2027,mes,0).getDate(),ini=(new Date(2027,mes-1,1).getDay()+6)%7;
+    var a=ativos(),n=new Date(2027,mes,0).getDate(),ini=new Date(2027,mes-1,1).getDay();
     $('mesNome').textContent=MESES[mes-1].charAt(0).toUpperCase()+MESES[mes-1].slice(1)+' de 2027';
     $('ant').disabled=mes===1;$('prox').disabled=mes===12;
-    var h=['seg','ter','qua','qui','sex','sáb','dom'].map(function(d){return '<div class="dsem" role="columnheader">'+d+'</div>';}).join('');
+    var h=['dom','seg','ter','qua','qui','sex','sáb'].map(function(d){return '<div class="dsem" role="columnheader">'+d+'</div>';}).join('');
     for(var i=0;i<ini;i++)h+='<div class="dia vazio" aria-hidden="true"></div>';
     var itens=[],totalEv=0,comps={};
     for(var d=1;d<=n;d++){var k=key(mes,d),evs=(POR[k]||[]).filter(function(e){return a.indexOf(e[0])>=0;}),p=pausas?perDe(k):null,wd=dt(k).getDay(),fds=wd===0||wd===6;
