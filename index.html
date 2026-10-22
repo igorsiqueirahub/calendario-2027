@@ -266,7 +266,7 @@ h2{font-size:clamp(22px,2.6vw,28px);letter-spacing:-.02em;line-height:1.15;margi
   <!-- ========== COMPETIÇÕES ========== -->
   <section class="painel" id="p-competicoes" role="tabpanel" hidden>
     <h2>Início, fim e decisões de cada competição</h2>
-    <p class="sub">Em ordem de início, de janeiro a abril. Datas-base previstas. As tabelas detalhadas, com jogos e horários, saem ao longo de cada torneio.</p>
+    <p class="sub">Datas-base previstas. As tabelas detalhadas, com jogos e horários, saem ao longo de cada torneio.</p>
     <div class="cards" id="cards"></div>
   </section>
 
@@ -449,8 +449,8 @@ h2{font-size:clamp(22px,2.6vw,28px);letter-spacing:-.02em;line-height:1.15;margi
     CBR:'Os 20 clubes da Série A entram na Fase 5. Ela e as oitavas têm duas janelas de datas, conforme a agenda internacional e os estádios da Copa Feminina. Final em jogo único.',EST:'Terminam obrigatoriamente até 7/3 nos estados com clubes da Série A.',REG:'Dez datas entre o fim de março e a metade de junho, reservadas às copas regionais.',
     LIB:'Fase 2 e 3 em fevereiro e março; grupos de abril a maio; final em 27/11.',CSU:'Playoff em julho; final em 20/11.',SCB:'Abre a temporada nacional.',REC:'Em ida e volta, em fevereiro.'};
   function desenhaCards(){
-    var INI={};DADOS.forEach(function(e){if(!INI[e[0]]||e[1]<INI[e[0]])INI[e[0]]=e[1];});
-    var CRONO=ORDEM.slice().sort(function(x,y){return INI[x]<INI[y]?-1:INI[x]>INI[y]?1:ORDEM.indexOf(x)-ORDEM.indexOf(y);});
+    /* ordem editorial: pela data de início, com as competições da Conmebol juntas e as Séries B, C, D e regionais no fim */
+    var CRONO=['CBR','EST','SCB','BSA','LIB','REC','CSU','BSB','BSC','BSD','REG'];
     $('cards').innerHTML=CRONO.map(function(k){var l=DADOS.filter(function(e){return e[0]===k;}),a=l[0][1],b=l[l.length-1][1],dest=l.filter(function(e,i){return DEST[k].test(e[2])||i===l.length-1;});
       var lista=function(arr){return '<ul>'+arr.map(function(e){return '<li><b>'+curta(e[1])+'</b><span>'+e[2]+' · '+SEM[dt(e[1]).getDay()]+'</span></li>';}).join('')+'</ul>';};
       var resumo=(k==='CBR'||k==='LIB'||k==='CSU'||k==='SCB'||k==='REC')?lista(l.length>8?l.filter(function(e){return !/rodada|Fase [1-4] /.test(e[2])||e===l[0];}):l):lista(dest);
